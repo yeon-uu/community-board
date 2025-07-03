@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 안전한 이름 생성
+        // 안전한 파일명 생성
         $unique_name = time() . '_' . bin2hex(random_bytes(5)) . '.' . $ext;
-        $upload_dir = __DIR__ . '/uploads/';
+        $upload_dir = '/var/www/.storage_x_data/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0755, true);
         }
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!-- HTML 폼 -->
- <?php include 'header.php'; ?>
+<?php include 'header.php'; ?>
 <div class="container py-5" style="max-width: 600px;">
   <div class="card shadow-lg">
     <div class="card-body">

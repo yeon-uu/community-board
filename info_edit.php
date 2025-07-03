@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 파일 삭제 요청 처리
     if (isset($_POST['delete_file']) && $filename) {
-        $file_path = __DIR__ . "/uploads/" . $filename;
+        $file_path = '/var/www/.storage_x_data/' . $filename;
         if (file_exists($file_path)) {
             unlink($file_path);
         }
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tmp_name = $_FILES['upload']['tmp_name'];
         $name = basename($_FILES['upload']['name']);
         $unique_name = time() . '_' . $name;
-        $upload_dir = __DIR__ . '/uploads/';
+        $upload_dir = '/var/www/.storage_x_data/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0755, true);
         }
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (move_uploaded_file($tmp_name, $save_path)) {
             // 기존 파일 있으면 삭제
             if ($filename) {
-                $old_path = __DIR__ . "/uploads/" . $filename;
+                $old_path = $upload_dir . $filename;
                 if (file_exists($old_path)) {
                     unlink($old_path);
                 }
@@ -85,13 +85,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <h2>정보게시판 글 수정</h2>
 <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+
     제목: <input type="text" name="title" value="<?= htmlspecialchars($post['title']) ?>"><br><br>
+
     내용:<br>
     <textarea name="content" rows="5" cols="50"><?= htmlspecialchars($post['content']) ?></textarea><br><br>
 
     <?php if ($post['filename']): ?>
-        현재 첨부파일: <a href="uploads/<?= htmlspecialchars($post['filename']) ?>" download><?= htmlspecialchars($post['filename']) ?></a><br>
-        <label><input type="checkbox" name="delete_file" value="1"> 첨부파일 삭제</label><br>
+        현재 첨부파일: 
+        <a href="download.php?file=<?= urlencode($post['filename']) ?>" target="_blank" download>
+            <?= htmlspecialchars($post['filename']) ?>
+        </a><br>
+        <label>
+            <input type="checkbox" name="delete_file" value="1"> 첨부파일 삭제
+        </label><br><br>
     <?php endif; ?>
 
     새 파일 첨부: <input type="file" name="upload"><br><br>

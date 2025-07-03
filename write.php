@@ -52,14 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 저장
-        $upload_dir = __DIR__ . '/uploads/';
+        // 저장 경로
+        $upload_dir = '/var/www/.storage_x_data/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0755, true);
         }
 
         // 랜덤 파일명
-        $safe_name = bin2hex(random_bytes(8)) . '.' . $ext;
+        $safe_name = time() . '_' . bin2hex(random_bytes(5)) . '.' . $ext;
         $save_path = $upload_dir . $safe_name;
 
         if (move_uploaded_file($tmp_name, $save_path)) {
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $board
     ]);
 
-    header("Location: list.php?board=" . htmlspecialchars($board));
+    header("Location: list.php?board=" . urlencode($board));
     exit;
 }
 ?>

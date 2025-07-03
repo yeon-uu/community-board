@@ -39,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 파일 삭제 요청
     if ($delete_file && $post['filename']) {
-        $file_path = __DIR__ . '/uploads/' . $post['filename'];
+        $file_path = '/var/www/.storage_x_data/' . $post['filename'];
+
         if (file_exists($file_path)) {
             unlink($file_path);
         }
@@ -51,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tmp_name = $_FILES['upload']['tmp_name'];
         $name = basename($_FILES['upload']['name']);
         $unique_name = time() . '_' . $name;
-        $upload_dir = __DIR__ . '/uploads/';
+        $upload_dir = '/var/www/.storage_x_data/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0755, true);
         }
@@ -84,9 +85,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <textarea name="content" rows="5" cols="40"><?= htmlspecialchars($post['content']) ?></textarea><br>
 
     <?php if ($post['filename']): ?>
-        현재 파일: <?= htmlspecialchars($post['filename']) ?><br>
-        <label><input type="checkbox" name="delete_file"> 파일 삭제</label><br>
-    <?php endif; ?>
+    현재 파일: 
+    <a href="download.php?file=<?= urlencode($post['filename']) ?>" target="_blank" download>
+        <?= htmlspecialchars($post['filename']) ?>
+    </a><br>
+    <label><input type="checkbox" name="delete_file"> 파일 삭제</label><br>
+<?php endif; ?>
+
 
     파일 첨부: <input type="file" name="upload"><br>
     <button type="submit">수정 완료</button>

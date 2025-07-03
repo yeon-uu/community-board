@@ -21,7 +21,7 @@ if (!$post) {
 $filename = $post['filename'] ?? '';
 $safe_filename = htmlspecialchars(basename($filename));
 $ext = strtolower(pathinfo($safe_filename, PATHINFO_EXTENSION));
-$filepath = __DIR__ . "/uploads/" . $safe_filename;
+$filepath = '/var/www/.storage_x_data/' . $safe_filename;
 
 $is_image = false;
 if ($filename && file_exists($filepath)) {
@@ -37,9 +37,7 @@ if ($filename && file_exists($filepath)) {
     <title><?= htmlspecialchars($post['title']) ?> - 게시글 보기</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #f1f3f5;
-        }
+        body { background-color: #f1f3f5; }
         .container-box {
             max-width: 800px;
             margin: 50px auto;
@@ -72,27 +70,26 @@ if ($filename && file_exists($filepath)) {
     <?php if ($filename): ?>
         <div class="mt-3">
             <?php if ($is_image): ?>
-                <img src="uploads/<?= urlencode($safe_filename) ?>" alt="첨부 이미지" class="attachment-preview">
+                <img src="download.php?file=<?= urlencode($safe_filename) ?>" alt="첨부 이미지" class="attachment-preview">
             <?php endif; ?>
-            <p class="mt-2">📎 첨부파일:
-                <a href="uploads/<?= urlencode($safe_filename) ?>" download class="link-primary">
+            <p class="mt-2"> 첨부파일:
+                <a href="download.php?file=<?= urlencode($safe_filename) ?>" class="link-primary" download>
                     <?= $safe_filename ?>
                 </a>
             </p>
         </div>
     <?php endif; ?>
 
-  <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $post['user_id']): ?>
-  <div class="text-end mt-3">
-    <a href="edit.php?id=<?= $post['id'] ?>" class="btn btn-outline-primary btn-sm">수정</a>
-    <form method="post" action="delete_post.php" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline;">
-      <input type="hidden" name="id" value="<?= $post['id'] ?>">
-      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-      <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
-    </form>
-  </div>
-<?php endif; ?>
-
+    <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $post['user_id']): ?>
+        <div class="text-end mt-3">
+            <a href="edit.php?id=<?= $post['id'] ?>" class="btn btn-outline-primary btn-sm">수정</a>
+            <form method="post" action="delete_post.php" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline;">
+                <input type="hidden" name="id" value="<?= $post['id'] ?>">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                <button type="submit" class="btn btn-outline-danger btn-sm">삭제</button>
+            </form>
+        </div>
+    <?php endif; ?>
 
     <div class="section-divider"></div>
 

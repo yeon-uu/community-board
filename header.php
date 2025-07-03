@@ -1,3 +1,15 @@
+<?php
+
+// 보안 헤더 – 이미 출력된 게 없을 때만
+if (!headers_sent()) {
+    header("X-Frame-Options: DENY");
+    header("X-Content-Type-Options: nosniff");
+    header("X-XSS-Protection: 1; mode=block");
+
+    // Bootstrap CDN 허용 – 꾸밈 유지
+    header("Content-Security-Policy: default-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;");
+}
+?>
 <!DOCTYPE html>
 <html lang="ko">
 <head>

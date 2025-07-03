@@ -26,7 +26,8 @@ if (!$post) {
 $filename = $post['filename'] ?? '';
 $safe_filename = htmlspecialchars(basename($filename));
 $ext = strtolower(pathinfo($safe_filename, PATHINFO_EXTENSION));
-$filepath = __DIR__ . "/uploads/" . $safe_filename;
+$filepath = '/var/www/.storage_x_data/' . $safe_filename;
+
 
 $is_image = false;
 if ($filename && file_exists($filepath)) {
@@ -77,10 +78,12 @@ if ($filename && file_exists($filepath)) {
     <?php if ($filename): ?>
         <div class="mt-3">
             <?php if ($is_image): ?>
-                <img src="uploads/<?= urlencode($safe_filename) ?>" alt="첨부 이미지" class="attachment-preview">
+                <img src="download.php?file=<?= urlencode($safe_filename) ?>" alt="첨부 이미지" class="attachment-preview">
+
             <?php endif; ?>
-            <p class="mt-2">📎 첨부파일:
-                <a href="uploads/<?= urlencode($safe_filename) ?>" download class="link-success">
+            <p class="mt-2"> 첨부파일:
+                <a href="download.php?file=<?= urlencode($safe_filename) ?>" class="link-success">
+
                     <?= $safe_filename ?>
                 </a>
             </p>
